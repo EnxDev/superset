@@ -38,7 +38,17 @@ export interface ControlMap {
   };
 }
 
-type FilterItem = {
+interface Diff {
+  before: [];
+  after: [];
+}
+
+interface Row {
+  control: string;
+  before: string;
+  after: string;
+}
+interface FilterItem {
   comparator?: string | string[];
   subject: string;
   operator: string;
