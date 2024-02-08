@@ -65,8 +65,7 @@ export type RowType = {
   before: string | number;
   after: string | number;
   control: string;
-};
-
+}
 
 interface AlteredSliceTagState {
   rows: RowType[];
@@ -86,7 +85,7 @@ const StyledLabel = styled.span`
   `}
 `;
 
-function alterForComparison(value?: string | null | []): string | null {
+function alterForComparison(value: any): any {
   // Treat `null`, `undefined`, and empty strings as equivalent
   if (value === undefined || value === null || value === '') {
     return null;
