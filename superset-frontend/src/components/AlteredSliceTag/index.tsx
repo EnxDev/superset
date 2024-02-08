@@ -38,7 +38,7 @@ export interface ControlMap {
   };
 }
 
-type FilterItemType = {
+interface FilterItem {
   comparator?: string | string[];
   subject: string;
   operator: string;
@@ -46,7 +46,7 @@ type FilterItemType = {
 };
 
 export type DiffItemType<
-  T = FilterItemType | number | string | Record<string | number, any>,
+  T = FilterItem | number | string | Record<string | number, any>,
 > =
   | T[]
   | boolean
@@ -179,7 +179,7 @@ class AlteredSliceTag extends React.Component<
         return '[]';
       }
       return value
-        .map((v: FilterItemType) => {
+        .map((v: FilterItem) => {
           const filterVal =
             v.comparator && v.comparator.constructor === Array
               ? `[${v.comparator.join(', ')}]`
@@ -198,14 +198,14 @@ class AlteredSliceTag extends React.Component<
       return value.map(v => safeStringify(v)).join(', ');
     }
     if (controlsMap[key]?.type === 'MetricsControl' && Array.isArray(value)) {
-      const formattedValue = value.map((v: FilterItemType) => v?.label ?? v);
+      const formattedValue = value.map((v: FilterItem) => v?.label ?? v);
       return formattedValue.length ? formattedValue.join(', ') : '[]';
     }
     if (typeof value === 'boolean') {
       return value ? 'true' : 'false';
     }
     if (Array.isArray(value)) {
-      const formattedValue = value.map((v: FilterItemType) => v?.label ?? v);
+      const formattedValue = value.map((v: FilterItem) => v?.label ?? v);
       return formattedValue.length ? formattedValue.join(', ') : '[]';
     }
     if (typeof value === 'string' || typeof value === 'number') {

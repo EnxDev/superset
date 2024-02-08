@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { QueryFormData } from '@superset-ui/core';
-import { ControlPanelConfig } from '@superset-ui/chart-controls';
-import { DiffType, RowType } from './index';
+
+import { ControlPanelConfig } from "@superset-ui/chart-controls";
+import { QueryFormData } from "@superset-ui/core";
 
 export const defaultProps: Record<string, Partial<QueryFormData>> = {
   origFormData: {
@@ -60,7 +60,7 @@ export const defaultProps: Record<string, Partial<QueryFormData>> = {
   },
 };
 
-export const expectedDiffs: Record<string, DiffType> = {
+export const expectedDiffs = {
   adhoc_filters: {
     before: [
       {
@@ -106,7 +106,7 @@ export const expectedDiffs: Record<string, DiffType> = {
     after: { x: 'y', z: 'z' },
   },
 };
-export const expectedRows: RowType[] = [
+export const expectedRows = [
   {
     control: 'Fake Filters',
     before: 'a == hello',
