@@ -44,7 +44,7 @@ export interface Row {
   after: string | number;
 }
 
-interface FilterItem {
+type FilterItem = {
   comparator?: string | string[];
   subject: string;
   operator: string;
@@ -72,6 +72,7 @@ export type RowType = {
   after: string | number;
   control: string;
 };
+
 
 interface AlteredSliceTagState {
   rows: RowType[];
