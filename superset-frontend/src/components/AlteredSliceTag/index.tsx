@@ -38,12 +38,6 @@ export interface ControlMap {
   };
 }
 
-export interface Row {
-  control: string;
-  before: string | number;
-  after: string | number;
-}
-
 type FilterItem = {
   comparator?: string | string[];
   subject: string;
