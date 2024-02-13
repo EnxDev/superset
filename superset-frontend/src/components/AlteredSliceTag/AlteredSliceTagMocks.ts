@@ -60,7 +60,7 @@ export const defaultProps: Record<string, Partial<QueryFormData>> = {
   },
 };
 
-export const expectedDiffs: Record<string, Partial<QueryFormData>> = {
+export const expectedDiffs: Record<string, DiffType> = {
   adhoc_filters: {
     before: [
       {
