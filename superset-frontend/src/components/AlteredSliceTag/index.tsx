@@ -37,12 +37,8 @@ export interface ControlMap {
     type?: string;
   };
 }
-export interface Row {
-  control: string;
-  before: string | number;
-  after: string | number;
-}
-interface FilterItem {
+
+type FilterItemType = {
   comparator?: string | string[];
   subject: string;
   operator: string;
@@ -50,7 +46,7 @@ interface FilterItem {
 };
 
 export type DiffItemType<
-  T = FilterItem | number | string | Record<string | number, any>,
+  T = FilterItemType | number | string | Record<string | number, any>,
 > =
   | T[]
   | boolean
@@ -69,7 +65,7 @@ export type RowType = {
   before: string | number;
   after: string | number;
   control: string;
-}
+};
 
 interface AlteredSliceTagState {
   rows: RowType[];
@@ -89,7 +85,7 @@ const StyledLabel = styled.span`
   `}
 `;
 
-function alterForComparison(value: any): any {
+function alterForComparison(value?: string | null | []): string | null {
   // Treat `null`, `undefined`, and empty strings as equivalent
   if (value === undefined || value === null || value === '') {
     return null;
@@ -202,14 +198,14 @@ class AlteredSliceTag extends React.Component<
       return value.map(v => safeStringify(v)).join(', ');
     }
     if (controlsMap[key]?.type === 'MetricsControl' && Array.isArray(value)) {
-      const formattedValue = value.map((v: FilterItem) => v?.label ?? v);
+      const formattedValue = value.map(v => v?.label ?? v);
       return formattedValue.length ? formattedValue.join(', ') : '[]';
     }
     if (typeof value === 'boolean') {
       return value ? 'true' : 'false';
     }
     if (Array.isArray(value)) {
-      const formattedValue = value.map((v: FilterItem) => v?.label ?? v);
+      const formattedValue = value.map(v => v?.label ?? v);
       return formattedValue.length ? formattedValue.join(', ') : '[]';
     }
     if (typeof value === 'string' || typeof value === 'number') {
