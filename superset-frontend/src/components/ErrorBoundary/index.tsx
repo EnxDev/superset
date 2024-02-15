@@ -50,7 +50,7 @@ export default class ErrorBoundary extends React.Component<
   }
 
   render() {
-    const { error, info } = this.state;
+    const { error } = this.state;
     if (error) {
       const firstLine = error.toString();
       const messageString = `${t('Unexpected error')}${firstLine ? `: ${firstLine}` : ''
@@ -67,7 +67,9 @@ export default class ErrorBoundary extends React.Component<
           <ErrorMessageWithStackTrace
             subtitle={messageElement}
             copyText={messageString}
-            stackTrace={info?.componentStack}
+            stackTrace={
+              this.state.info ? this.state.info.componentStack : undefined
+            }
           />
         );
       }
