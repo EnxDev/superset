@@ -179,7 +179,7 @@ class AlteredSliceTag extends React.Component<
         return '[]';
       }
       return value
-        .map(v => {
+        .map((v: FilterItemType) => {
           const filterVal =
             v.comparator && v.comparator.constructor === Array
               ? `[${v.comparator.join(', ')}]`
@@ -197,14 +197,17 @@ class AlteredSliceTag extends React.Component<
     ) {
       return value.map(v => safeStringify(v)).join(', ');
     }
-    if (controlsMap[key]?.type === 'MetricsControl' && Array.isArray(value)) {
+    if (
+      controlsMap[key]?.type === 'MetricsControl' &&
+      value.constructor === Array
+    ) {
       const formattedValue = value.map(v => v?.label ?? v);
       return formattedValue.length ? formattedValue.join(', ') : '[]';
     }
     if (typeof value === 'boolean') {
       return value ? 'true' : 'false';
     }
-    if (Array.isArray(value)) {
+    if (value.constructor === Array) {
       const formattedValue = value.map(v => v?.label ?? v);
       return formattedValue.length ? formattedValue.join(', ') : '[]';
     }
