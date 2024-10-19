@@ -18,7 +18,6 @@
 
 
 import pytest
-from sqlglot import Dialects
 
 from superset.exceptions import SupersetParseError
 from superset.sql.parse import (
