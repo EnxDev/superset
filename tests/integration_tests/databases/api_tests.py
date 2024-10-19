@@ -2003,7 +2003,7 @@ class TestDatabaseApi(SupersetTestCase):
         example_db = get_example_database()
         uri = f"api/v1/database/{example_db.id}/tables/?q={prison.dumps({'schema_name': 'non_existent'})}"
         rv = self.client.get(uri)
-        self.assertEqual(rv.status_code, 404)
+        assert rv.status_code == 404
         logger_mock.warning.assert_called_once_with(
             "Database not found.", exc_info=True
         )
@@ -2035,7 +2035,7 @@ class TestDatabaseApi(SupersetTestCase):
         rv = self.client.get(
             f"api/v1/database/{database.id}/tables/?q={prison.dumps({'schema_name': 'main'})}"
         )
-        self.assertEqual(rv.status_code, 422)
+        assert rv.status_code == 422
         logger_mock.warning.assert_called_once_with("Test Error", exc_info=True)
 
     def test_test_connection(self):
