@@ -283,7 +283,7 @@ class TestDashboardApi(ApiOwnersTestCaseMixin, InsertChartMixin, SupersetTestCas
         actual_dataset_ids = {dataset["id"] for dataset in result}
         assert actual_dataset_ids == expected_dataset_ids
         expected_values = [0, 1] if backend() == "presto" else [0, 1, 2]
-        self.assertEqual(result[0]["column_types"], expected_values)
+        assert result[0]["column_types"] == expected_values
         logger_mock.warning.assert_not_called()
 
     @pytest.mark.usefixtures("load_world_bank_dashboard_with_slices")
@@ -310,7 +310,7 @@ class TestDashboardApi(ApiOwnersTestCaseMixin, InsertChartMixin, SupersetTestCas
         self.login(ALPHA_USERNAME)
         uri = "api/v1/dashboard/not_found/datasets"
         response = self.get_assert_metric(uri, "get_datasets")
-        self.assertEqual(response.status_code, 404)
+        assert response.status_code == 404
         logger_mock.warning.assert_called_once_with(
             "Dashboard not found.", exc_info=True
         )
@@ -325,7 +325,7 @@ class TestDashboardApi(ApiOwnersTestCaseMixin, InsertChartMixin, SupersetTestCas
         self.login(ADMIN_USERNAME)
         uri = "api/v1/dashboard/world_health/datasets"
         response = self.get_assert_metric(uri, "get_datasets")
-        self.assertEqual(response.status_code, 422)
+        assert response.status_code == 422
         logger_mock.warning.assert_called_once_with(
             "Dataset schema is invalid, caused by: Invalid schema", exc_info=True
         )
