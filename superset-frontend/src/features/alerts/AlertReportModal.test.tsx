@@ -28,6 +28,7 @@ import {
   fireEvent,
 } from 'spec/helpers/testing-library';
 import reducerIndex from 'spec/helpers/reducerIndex';
+import { FeatureFlag, isFeatureEnabled } from '@superset-ui/core';
 import { buildErrorTooltipMessage } from './buildErrorTooltipMessage';
 import AlertReportModal, { AlertReportModalProps } from './AlertReportModal';
 import * as navigationUtils from 'src/utils/navigationUtils';
@@ -36,8 +37,9 @@ import { SubjectType } from 'src/types/Subject';
 
 jest.mock('@superset-ui/core', () => ({
   ...jest.requireActual('@superset-ui/core'),
-  isFeatureEnabled: () => true,
+  isFeatureEnabled: jest.fn(() => true),
 }));
+const mockedIsFeatureEnabled = isFeatureEnabled as jest.Mock;
 
 jest.mock('src/utils/getBootstrapData', () => ({
   __esModule: true,
@@ -326,6 +328,9 @@ afterEach(() => {
   mockGetChartDataRequest.mockResolvedValue({
     json: { result: [{ data: [] }] },
   });
+
+  // Re-enable every flag in case a test switched one off
+  mockedIsFeatureEnabled.mockImplementation(() => true);
 });
 
 // Create a valid alert with all required fields entered for validation check
@@ -3047,6 +3052,23 @@ test('renders error handling panel with Enable Retries switch', async () => {
   await userEvent.click(errorHandlingTab);
   expect(screen.getByText('Enable Retries')).toBeInTheDocument();
 });
+
+test.each([false, true])(
+  'hides error handling panel when ALERT_REPORTS_RETRY is off for isReport=%s',
+  isReport => {
+    mockedIsFeatureEnabled.mockImplementation(
+      (featureFlag: FeatureFlag) =>
+        featureFlag !== FeatureFlag.AlertReportsRetry,
+    );
+    render(<AlertReportModal {...generateMockedProps(isReport)} />, {
+      useRedux: true,
+    });
+    expect(screen.queryByText('Error handling')).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId('error-handling-panel'),
+    ).not.toBeInTheDocument();
+  },
+);
 
 test.each([false, true])(
   'shows retry options for isReport=%s',

@@ -233,6 +233,33 @@ def test_rejected_capture_enters_whole_execution_retry(
     schedule_retry.assert_called_once_with(60)
 
 
+@pytest.mark.parametrize("schedule_type", list(ReportScheduleType))
+def test_retry_flag_off_ignores_report_opt_in(
+    mocker: MockerFixture,
+    schedule_type: ReportScheduleType,
+) -> None:
+    """ALERT_REPORTS_RETRY off overrides a report's retry_on_failure opt-in."""
+    state = _make_notification_state(mocker, schedule_type=schedule_type)
+    state._report_schedule.retry_on_failure = True
+    state._report_schedule.retry_max_attempts = 3
+    state._report_schedule.retry_attempt = 0
+    state._report_schedule.retry_scheduled_dttm = None
+    is_feature_enabled = mocker.patch(
+        "superset.commands.report.execute.feature_flag_manager.is_feature_enabled",
+        return_value=False,
+    )
+    update_log = mocker.patch.object(state, "update_report_schedule_and_log")
+    schedule_retry = mocker.patch.object(state, "_schedule_retry")
+
+    error = ReportScheduleScreenshotFailedError("blank capture rejected")
+
+    assert state._handle_retry_or_error(str(error), error) is False
+    is_feature_enabled.assert_called_once_with("ALERT_REPORTS_RETRY")
+    assert state._report_schedule.retry_attempt == 0
+    update_log.assert_not_called()
+    schedule_retry.assert_not_called()
+
+
 @pytest.mark.parametrize(
     "state_cls", [ReportNotTriggeredErrorState, ReportSuccessState]
 )
